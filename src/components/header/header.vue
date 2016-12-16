@@ -32,14 +32,7 @@
         <div v-show="detailShow" class="detail">
             <div class="detail-wrapper clearfix">
                 <div class="detail-main">
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
-                    <p>{{seller.bulletin}}</p>
+                    <h1 class="name">{{seller.name}}</h1>
                 </div>
             </div>
             <div class="detail-close">
@@ -73,14 +66,12 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-
     @import "../../common/sass/mixin";
-
     .header {
         position: relative;
         color: #fff;
         overflow: hidden;
-        background-color: rgba(7,17,27,.5);
+        background-color: rgba(7, 17, 27, .5);
         .content-wrapper {
             position: relative;
             padding: 24px 12px 18px 24px;
@@ -161,7 +152,7 @@
                 height: 24px;
                 line-height: 24px;
                 border-radius: 14px;
-                background: rgba(0,0,0,.2);
+                background: rgba(0, 0, 0, .2);
                 text-align: center;
                 .count {
                     vertical-align: top;
@@ -182,7 +173,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            background-color: rgba(7,17,27,.2);
+            background-color: rgba(7, 17, 27, .2);
             .bulletin-title {
                 display: inline-block;
                 width: 22px;
@@ -222,12 +213,19 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background: rgba(7,17,27,.8);
+            background: rgba(7, 17, 27, .8);
             .detail-wrapper {
+                width: 100%;
                 min-height: 100%;
                 .detail-main {
                     margin-top: 64px;
                     padding-bottom: 64px;
+                    .name {
+                        line-height: 16px;
+                        text-align: center;
+                        font-size: 16px;
+                        font-weight: 700;
+                    }
                 }
             }
             .detail-close {
