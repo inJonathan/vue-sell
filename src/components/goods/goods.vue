@@ -4,12 +4,37 @@
             <ul>
                 <li v-for="item in goods" class="menu-item">
                     <span class="text border-1px">
-            	        <span v-show="item.type > 0" class="icon" :class="classMap[item.type]">{{item.name}}</span>
+            	        <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span> {{item.name}}
                     </span>
                 </li>
             </ul>
         </div>
-        <div class="foods-wrapper"></div>
+        <div class="foods-wrapper">
+            <ul>
+                <li v-for="item in goods" class="food-list">
+                    <h1 class="title">{{item.name}}</h1>
+                    <ul>
+                        <li v-for="food in item.foods" class="food-item">
+                            <div class="icon">
+                                <img :src="food.icon" />
+                            </div>
+                            <div class="content">
+                                <h2 class="name">{{food.name}}</h2>
+                                <p class="desc">{{food.description}}</p>
+                                <div class="extra">
+                                    <span>月售{{food.sellCount}}份</span>
+                                    <span>好评率{{food.rating}}%</span>
+                                </div>
+                                <div class="price">
+                                    <span>￥{{food.price}}</span>
+                                    <span v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -41,7 +66,6 @@
 
 <style lang="scss" rel="stylesheet/scss">
     @import "../../common/sass/mixin";
-
     .goods {
         display: flex;
         position: absolute;
@@ -57,6 +81,7 @@
                 display: table;
                 width: 56px;
                 height: 54px;
+                padding: 0 12px;
                 line-height: 14px;
                 .icon {
                     display: inline-block;
@@ -85,9 +110,9 @@
                 .text {
                     display: table-cell;
                     width: 56px;
-                    vertical-align: center;
+                    vertical-align: middle;
                     font-size: 12px;
-                    @include border-1px(rgba(7,17,27,.1));
+                    @include border-1px(rgba(7, 17, 27, .1));
                 }
             }
         }
