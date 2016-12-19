@@ -14,7 +14,7 @@
                 <li v-for="item in goods" class="food-list">
                     <h1 class="title">{{item.name}}</h1>
                     <ul>
-                        <li v-for="food in item.foods" class="food-item">
+                        <li v-for="food in item.foods" class="food-item border-1px">
                             <div class="icon">
                                 <img :src="food.icon" />
                             </div>
@@ -118,6 +118,27 @@
         }
         .foods-wrapper {
             flex: 1;
+            .title {
+                padding-left: 14px;
+                height: 26px;
+                line-height: 26px;
+                border-left: 2px solid #d9dde1;
+                font-size: 12px;
+                color: rgb(147, 153, 159);
+                background: #f3f5f7;
+            }
+            .food-item {
+                display: flex;
+                margin: 18px;
+                padding-bottom: 18px;
+                &:last-child {
+                    margin-bottom: 0;
+                    &:after {
+                        display: none;
+                    }
+                }
+                @include border-1px(rgba(7, 17, 27, .1));
+            }
         }
     }
 </style>
