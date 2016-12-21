@@ -8,11 +8,16 @@
                     </div>
                     <div class="num" v-show="totalPrice > 0">{{totalCount}}</div>
                 </div>
-                <div class="price"> &yen; {{totalPrice}} 元</div>
-                <div class="desc">另需配送费 &yen; {{deliveryPrice}} 元</div>
+                <div class="price"> ¥ {{totalPrice}} 元</div>
+                <div class="desc">另需配送费 ¥ {{deliveryPrice}} 元</div>
             </div>
             <div class="content-right">
-                <div class="pay" :class="{'enough': totalPrice > minPrice}">{{payDesc}}</div>
+                <div class="pay" :class="{'enough': totalPrice >= minPrice}">{{payDesc}}</div>
+            </div>
+        </div>
+        <div class="ball-container">
+            <div transition="drop" v-for="ball in balls" v-show="ball.show" class="ball">
+                <div class="inner inner-hook"></div>
             </div>
         </div>
     </div>
@@ -41,6 +46,28 @@
                 default: 0
             }
         },
+        data() {
+            return {
+                balls: [
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    }
+                ],
+                dropBalls: []
+            };
+        },
         computed: {
             totalPrice() {
                 let total = 0;
@@ -58,12 +85,67 @@
             },
             payDesc() {
                 if (this.totalPrice === 0) {
-                    return ` &yen; ${this.minPrice} 元起送`;
+                    return ` ¥ ${this.minPrice} 元起送`;
                 } else if (this.totalPrice < this.minPrice) {
                     let diff = this.minPrice - this.totalPrice;
                     return `还差 ${diff} 元起送`;
                 } else {
                     return '去结算';
+                }
+            }
+        },
+        methods: {
+            drop(el) {
+                for (let i = 0; i < this.balls.length; i++) {
+                    let ball = this.balls[i];
+                    if (!ball.show) {
+                        ball.show = true;
+                        ball.el = el;
+                        this.dropBalls.push(ball);
+                        return;
+                    }
+                }
+            }
+        },
+        transitions: {
+            drop: {
+                beforeEnter(el) {
+                    // 拿到所有show为true的小球
+                    let count = this.balls.length;
+                    while (count--) {
+                        let ball = this.balls[count];
+                        if (ball.show) {
+                            let rect = ball.el.getBoundingClientRect();
+                            // 获得动画前的偏移量
+                            let x = rect.left - 32;
+                            let y = -(window.innerHeight - rect.top - 22);
+                            el.style.display = '';
+                            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+                            el.style.transform = `translate3d(0, ${y}px, 0)`;
+                            let inner = el.getElementsByClassName('inner-hook')[0];
+                            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+                            inner.style.transform = `translate3d(${x}px, 0, 0)`;
+                        }
+                    }
+                },
+                enter(el) {
+                    /* eslint-disable no-unused-vars */
+                    // 手动触发重绘
+                    let rf = el.offsetHeight;
+                    this.$nextTick(() => {
+                        el.style.webkitTransform = 'translate3d(0, 0, 0)';
+                        el.style.transform = 'translate3d(0, 0, 0)';
+                        let inner = el.getElementsByClassName('inner-hook')[0];
+                        inner.style.webkitTransform = 'translate3d(0, 0, 0)';
+                        inner.style.transform = 'translate3d(0, 0, 0)';
+                    });
+                },
+                afterEnter(el) {
+                    let ball = this.dropBalls.shift();
+                    if (ball) {
+                        ball.show = false;
+                        el.style.display = 'none';
+                    }
                 }
             }
         }
@@ -167,6 +249,24 @@
                     &.enough {
                         color: #fff;
                         background: #00b43c;
+                    }
+                }
+            }
+        }
+        .ball-container {
+            .ball {
+                z-index: 200;
+                position: fixed;
+                left: 32px;
+                bottom: 22px;
+                &.drop-transition {
+                    transition: all .4s cubic-bezier(.49, -.29, .75, .41);
+                    .inner {
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 50%;
+                        background: rgb(0, 160, 220);
+                        transition: all .4s linear;
                     }
                 }
             }

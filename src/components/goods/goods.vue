@@ -25,7 +25,7 @@
                                     <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                                 </div>
                                 <div class="price">
-                                    <span class="now">&yen; {{food.price}}</span><span class="old" v-show="food.oldPrice">&yen; {{food.oldPrice}}</span>
+                                    <span class="now">¥ {{food.price}}</span><span class="old" v-show="food.oldPrice">¥ {{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
                                     <!-- 关联food -->
@@ -37,7 +37,7 @@
                 </li>
             </ul>
         </div>
-        <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <shopcart v-ref:shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 
@@ -72,6 +72,18 @@
                     }
                 }
                 return 0;
+            },
+            selectFoods() {
+                let foods = [];
+                // 这个计算属性观测的是goods对象，goods里面包含food，一旦food变化goods也会变化，那么就会重新进行计算
+                this.goods.forEach((good) => {
+                    good.foods.forEach((food) => {
+                        if (food.count) {
+                            foods.push(food);
+                        }
+                    });
+                });
+                return foods;
             }
         },
         created() {
@@ -97,6 +109,13 @@
                 let foodList = this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
                 let el = foodList[index];
                 this.foodsScroll.scrollToElement(el, 300);
+            },
+            _drop(target) {
+                // 体验优化，异步执行下落动画
+                this.$nextTick(() => {
+                    // 调用子组件的drop方法，把target传进去
+                    this.$refs.shopcart.drop(target);
+                });
             },
             _initScroll() {
                 this.menuScroll = new BScroll(this.$els.menuWrapper, {
@@ -125,6 +144,14 @@
         components: {
             shopcart,
             cartcontrol
+        },
+        events: {
+            // 父组件接收到子组件派发出来的事件
+            'cart.add'(target) {
+                // 执行methods里面定义的方法
+                // cartcontrol(子：获得DOM节点) --DOM--> goods(父) --DOM--> shopcart(子：DOM节点执行动画)
+                this._drop(target);
+            }
         }
     };
 </script>
