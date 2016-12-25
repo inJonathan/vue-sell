@@ -292,7 +292,7 @@
                     box-sizing: border-box;
                     border-right: 1px solid rgba(255, 255, 255, .1);
                     font-size: 16px;
-                    font-weight: 700px;
+                    font-weight: 700;
                     color: rgba(255, 255, 255, .4);
                 }
                 .desc {
