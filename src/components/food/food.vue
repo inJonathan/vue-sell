@@ -16,11 +16,22 @@
                 <div class="price">
                     <span class="now">¥ {{food.price}}</span><span class="old" v-show="food.oldPrice">¥ {{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                    <cartcontrol :food="food"></cartcontrol>
+                </div>
+                <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count === 0" transition="fade">加入购物车</div>
             </div>
-            <div class="cartcontrol-wrapper">
-                <cartcontrol :food="food"></cartcontrol>
+            <split v-show="food.info"></split>
+            <div class="info" v-show="food.info">
+                <h1 class="title">商品信息</h1>
+                <p class="text">{{food.info}}</p>
             </div>
-            <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count === 0" transition="fade">加入购物车</div>
+            <split></split>
+            <div class="rating">
+                <h1 class="title">商品评价</h1>
+                <!--把数据传入子组件，覆盖掉默认数据-->
+                <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+            </div>
         </div>
     </div>
 </template>
@@ -29,6 +40,12 @@
     import Vue from 'vue';
     import BScroll from 'better-scroll';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
+    import split from 'components/split/split';
+    import ratingselect from 'components/ratingselect/ratingselect';
+
+    // const POSITIVE = 0;
+    // const NEGATIVE = 1;
+    const ALL = 2;
 
     export default {
         props: {
@@ -38,12 +55,21 @@
         },
         data() {
             return {
-                showFlag: false
+                showFlag: false,
+                selectType: ALL,
+                onlyContent: true,
+                desc: {
+                    all: '全部',
+                    positive: '推荐',
+                    negative: '吐槽'
+                }
             };
         },
         methods: {
             show() {
                 this.showFlag = true;
+                this.selectType = ALL;
+                this.onlyContent = true;
                 this.$nextTick(() => {
                     if (!this.scroll) {
                         this.scroll = new BScroll(this.$els.food, {
@@ -58,15 +84,18 @@
                 this.showFlag = false;
             },
             addFirst(event) {
+                // 干掉原生点击事件
                 if (!event._constructed) {
-                return;
+                    return;
                 }
                 this.$dispatch('cart.add', event.target);
                 Vue.set(this.food, 'count', 1);
             }
         },
         components: {
-            cartcontrol
+            cartcontrol,
+            split,
+            ratingselect
         }
     };
 </script>
@@ -112,6 +141,7 @@
             }
         }
         .content {
+            position: relative;
             padding: 18px;
             .title {
                 line-height: 14px;
@@ -147,29 +177,53 @@
                     color: rgb(147, 153, 159);
                 }
             }
-        }
-        .cartcontrol-wrapper {
-            position: absolute;
-            right: 12px;
-            bottom: 12px;
-        }
-        .buy {
-            position: absolute;
-            right: 18px;
-            bottom: 18px;
-            z-index: 10px;
-            padding: 8px 18px;
-            box-sizing: border-box;
-            border-radius: 18px;
-            color: #fff;
-            font-size: 12px;
-            background-color: rgb(0, 160, 220);
-            &.fade-transition {
-                transition: all 0.2s;
-                opacity: 1;
+            .cartcontrol-wrapper {
+                position: absolute;
+                right: 12px;
+                bottom: 12px;
             }
-            &.fade-enter, &.fade-leave {
-                opacity: 0;
+            .buy {
+                position: absolute;
+                right: 18px;
+                bottom: 18px;
+                z-index: 10px;
+                padding: 8px 18px;
+                box-sizing: border-box;
+                border-radius: 18px;
+                color: #fff;
+                font-size: 12px;
+                background-color: rgb(0, 160, 220);
+                &.fade-transition {
+                    transition: all 0.2s;
+                    opacity: 1;
+                }
+                &.fade-enter, &.fade-leave {
+                    opacity: 0;
+                }
+            }
+        }
+        .info {
+            padding: 18px;
+            .title {
+                line-height: 14px;
+                margin-bottom: 6px;
+                font-size: 14px;
+                color: rgb(7, 17, 27);
+            }
+            .text {
+                padding: 0 8px;
+                line-height: 24px;
+                font-size: 12px;
+                color: rgb(77, 85, 93);
+            }
+        }
+        .rating {
+            padding-top: 18px;
+            .title {
+                line-height: 14px;
+                margin-left: 18px;
+                font-size: 14px;
+                color: rgb(7, 17, 27);
             }
         }
     }
