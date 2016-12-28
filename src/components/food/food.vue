@@ -31,20 +31,37 @@
                 <h1 class="title">商品评价</h1>
                 <!--把数据传入子组件，覆盖掉默认数据-->
                 <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+                <div class="rating-wrapper">
+                    <ul v-show="food.ratings && food.ratings.length">
+                        <li v-show="needShow(rating.rateType, rating.text)" v-for="rating in food.ratings" class="rating-item">
+                            <div class="user">
+                                <span class="name">{{rating.username}}</span>
+                                <img :src="rating.avatar" class="avatar" width="12" height="12">
+                            </div>
+                            <div class="time">{{rating.rateTime | formatDate}}</div>
+                            <p class="text">
+                                <span :class="{'icon-thumb_up': rating.rateType === 0, 'icon-thumb_down': rating.rateType === 1}"></span>
+                                {{rating.text}}
+                            </p>
+                        </li>
+                    </ul>
+                    <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    // 使用export function出来的模块，应带花括号
+    // 使用export default出来的模块，应不带花括号
     import Vue from 'vue';
     import BScroll from 'better-scroll';
+    import {formatDate} from 'common/js/date';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
     import split from 'components/split/split';
     import ratingselect from 'components/ratingselect/ratingselect';
 
-    // const POSITIVE = 0;
-    // const NEGATIVE = 1;
     const ALL = 2;
 
     export default {
@@ -90,6 +107,42 @@
                 }
                 this.$dispatch('cart.add', event.target);
                 Vue.set(this.food, 'count', 1);
+            },
+            // 过滤不应该显示的评论种类
+            // needShow方法在循环里面，因此每循环一条评论都会对评论类型进行一次判断，只有通过判断的评论才可以显示出来
+            needShow(type, text) {
+                if (this.onlyContent && !text) {
+                    return false;
+                }
+                if (this.selectType === ALL) {
+                    return true;
+                } else {
+                    return type === this.selectType;
+                }
+            }
+        },
+        // 监听子组件派发的事件
+        // 子组件改变状态，通过事件的方式传递给父组件，父组件重新赋值
+        events: {
+            'ratingtype.select'(type) {
+                this.selectType = type;
+                // 评论数据的变动会影响页面展示高度，因此要刷新一遍better-scroll插件，重新计算高度
+                // 刷新之前，要手动调用一次DOM更新
+                this.$nextTick(() => {
+                    this.scroll.refresh();
+                });
+            },
+            'content.toggle'(onlyContent) {
+                this.onlyContent = onlyContent;
+                this.$nextTick(() => {
+                    this.scroll.refresh();
+                });
+            }
+        },
+        filters: {
+            formatDate(time) {
+                let date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd hh:mm');
             }
         },
         components: {
@@ -101,6 +154,8 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+@import "../../common/sass/mixin.scss";
+
     .food {
         position: fixed;
         top: 0;
@@ -224,6 +279,58 @@
                 margin-left: 18px;
                 font-size: 14px;
                 color: rgb(7, 17, 27);
+            }
+            .rating-wrapper {
+                padding: 0 18px;
+                .rating-item {
+                    position: relative;
+                    padding: 16px 0;
+                    @include border-1px(rgba(7, 17, 27, 0.1));
+                    .user {
+                        position: absolute;
+                        right: 0;
+                        top: 16px;
+                        line-height: 12px;
+                        font-size: 0;
+                        .name {
+                            display: inline-block;
+                            margin-right: 6px;
+                            vertical-align: top;
+                            font-size: 10px;
+                            color: rgb(147, 153, 159);
+                        }
+                        .avatar{
+                            border-radius: 50%;
+                        }
+                    }
+                    .time{
+                        margin-bottom: 6px;
+                        line-height: 12px;
+                        font-size: 10px;
+                        color: rgb(147, 153, 159);
+                    }
+                    .text{
+                        line-height: 16px;
+                        font-size: 12px;
+                        color: rgb(7, 17, 27);
+                        .icon-thumb_up, .icon-thumb_down {
+                            margin-right: 4px;
+                            line-height: 16px;
+                            font-size: 12px;
+                        }
+                        .icon-thumb_up {
+                            color: rgb(0, 160, 220);
+                        }
+                        .icon-thumb_down {
+                            color: rgb(147, 153, 159);
+                        }
+                    }
+                }
+                .no-rating {
+                    padding: 16px 0;
+                    font-size: 12px;
+                    color: rgb(147, 153, 159);
+                }
             }
         }
     }

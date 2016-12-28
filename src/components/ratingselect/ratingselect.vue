@@ -68,6 +68,7 @@
                 }
                 this.selectType = type;
                 // 派发事件通知父组件数据改变
+                // 子组件改变状态，通过事件的方式传递给父组件，父组件重新赋值
                 this.$dispatch('ratingtype.select', type);
             },
             toggleContent(event) {
@@ -75,6 +76,8 @@
                     return;
                 }
                 this.onlyContent = !this.onlyContent;
+                // 派发事件通知父组件数据改变
+                // 子组件改变状态，通过事件的方式传递给父组件，父组件重新赋值
                 this.$dispatch('content.toggle', this.onlyContent);
             }
         }
