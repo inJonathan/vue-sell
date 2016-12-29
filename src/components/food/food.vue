@@ -57,10 +57,10 @@
     // 使用export default出来的模块，应不带花括号
     import Vue from 'vue';
     import BScroll from 'better-scroll';
-    import {formatDate} from 'common/js/date';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
     import split from 'components/split/split';
     import ratingselect from 'components/ratingselect/ratingselect';
+    import {formatDate} from 'common/js/date';
 
     const ALL = 2;
 
