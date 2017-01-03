@@ -1,6 +1,6 @@
-# sell
+# vue-sell
 
-> sell app
+> 使用vue1.0开发的高仿饿了么点餐WebApp
 
 ## Build Setup
 
@@ -14,14 +14,10 @@ npm run dev
 # build for production with minification
 npm run build
 
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+# 模拟服务器运行
+node prod.server.js
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![app demo](http://f.caozhuo.net/demo/IMG_0464.PNG)
+![app demo](http://f.caozhuo.net/demo/IMG_0465.PNG)
+![app demo](http://f.caozhuo.net/demo/IMG_0467.PNG)
+![app demo](http://f.caozhuo.net/demo/IMG_0466.PNG)
