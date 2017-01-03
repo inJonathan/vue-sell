@@ -17,7 +17,5 @@ npm run build
 # 模拟服务器运行
 node prod.server.js
 ```
-![app demo](http://f.caozhuo.net/demo/IMG_0464.PNG?imageView2/2/w/500)
-![app demo](http://f.caozhuo.net/demo/IMG_0465.PNG?imageView2/2/w/500)
-![app demo](http://f.caozhuo.net/demo/IMG_0467.PNG?imageView2/2/w/500)
-![app demo](http://f.caozhuo.net/demo/IMG_0466.PNG?imageView2/2/w/500)
+![app demo](http://f.caozhuo.net/demo/IMG_0464.PNG?imageView2/2/w/360)
+![app demo](http://f.caozhuo.net/demo/IMG_0467.PNG?imageView2/2/w/360)
