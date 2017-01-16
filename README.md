@@ -15,5 +15,6 @@ npm run dev
 npm run build
 
 # 模拟服务器运行
+npm run build
 node prod.server.js
 ```
