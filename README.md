@@ -1,6 +1,6 @@
 # vue-sell
 
-> 使用vue1.0开发的高仿饿了么点餐WebApp
+> 使用vue开发的高仿饿了么点餐WebApp
 
 ## Build Setup
 
