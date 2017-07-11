@@ -18,3 +18,4 @@ npm run build
 npm run build
 node prod.server.js
 ```
+[演示 GifDemo](http://oiivm9udq.bkt.clouddn.com/demo/vuesell.gif)
